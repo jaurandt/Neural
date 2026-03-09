@@ -87,8 +87,8 @@ unsigned TrainingData::getTargetOutputs(vector<double>& targetOutputVals)
 
 struct Connection
 {
-    double weight;
-    double deltaWeight;
+    double weight = 0.0;
+    double deltaWeight = 0.0;
 };
 
 class Neuron;
@@ -112,7 +112,7 @@ class Neuron
         static double alpha; // [0.0, ..., n] multiplier of last weight change (momentum)
         static double transferFunction(double x);
         static double transferFunctionDerivative(double x);
-        static double randomWeight() { return rand() / double(RAND_MAX); }
+        static double randomWeight() { return 0.2 * (2.0 * rand() / double(RAND_MAX) - 1.0); }
         double sumDOW(const Layer& nextLayer) const;
         unsigned m_myIndex;
         double m_outputVal;
@@ -204,7 +204,7 @@ Neuron::Neuron(unsigned numOutputs, unsigned myIndex, const double eta, const do
 }
 
 // Initialize static members
-double Neuron::eta = 0.15;
+double Neuron::eta = 0.3;
 double Neuron::alpha = 0.5;
 
 class Net
@@ -294,9 +294,12 @@ void Net::feedForward(const vector<double>& inputVals)
     //forward propagation
     for(unsigned layerNum = 1; layerNum < m_layers.size(); ++layerNum) {
         Layer& prevLayer = m_layers[layerNum - 1]; //optimize
-        for(unsigned n = 0; n < m_layers[layerNum].size(); ++n) {
+        
+        for(unsigned n = 0; n < m_layers[layerNum].size() - 1; ++n) {
             m_layers[layerNum][n].feedForward(prevLayer);
         }
+
+        m_layers[layerNum].back().setOutputVal(1.0);
     }
 }
 
@@ -307,8 +310,8 @@ Net::Net(const vector<unsigned>& topology)
     unsigned numOutputs;
 
     //overall Net learning rate and momentum
-    const double eta = 0.1; //learning rate
-    const double alpha = 0.5; //momentum
+    const double eta = 0.15; //learning rate
+    const double alpha = 0.3; //momentum
 
     //net has layers
     for(unsigned layerNum = 0; layerNum < numLayers; ++layerNum) {
