@@ -6,8 +6,8 @@ A feedforward neural network with backpropagation, implemented from scratch in C
 
 The network is organized into layers of neurons. Training happens in two phases each pass:
 
-1. **Feed forward** — inputs propagate through the network layer by layer, each neuron computing a weighted sum of its inputs passed through a `tanh` activation function
-2. **Backpropagation** — the error between the network's output and the target is propagated backwards through the layers, adjusting each connection's weight using gradient descent
+1. **Feed forward**: inputs propagate through the network layer by layer, each neuron computing a weighted sum of its inputs passed through a `tanh` activation function
+2. **Backpropagation**: the error between the network's output and the target is propagated backwards through the layers, adjusting each connection's weight using gradient descent
 
 The network topology (number of layers and neurons per layer) is read from the training data file, making it easy to experiment with different architectures without recompiling.
 
